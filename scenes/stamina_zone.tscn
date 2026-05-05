@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://i3e3ravbcnvq"]
 
-[ext_resource type="Texture2D" uid="uid://dkcob5gx2lv7w" path="res://sprites/icon.svg" id="1_wld70"]
+[ext_resource type="Texture2D" uid="uid://be5f4swh42ykg" path="res://sprites/staminaCharger.png" id="1_wld70"]
 
 [sub_resource type="GDScript" id="GDScript_tbgi4"]
 resource_name = "StaminaZone"
@@ -45,16 +45,17 @@ scale = Vector2(0.9999999, 0.9999999)
 shape = SubResource("RectangleShape2D_sg5wv")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=612392395]
-position = Vector2(0, 2.2888184e-05)
-scale = Vector2(0.99999994, 0.99999994)
+position = Vector2(-4.7683716e-07, 7.1525574e-06)
+scale = Vector2(1.6823654, 2.0609674)
 texture = ExtResource("1_wld70")
 
 [node name="ProgressBar" type="ProgressBar" parent="." unique_id=1463612209]
-modulate = Color(1.6023252, 11.186601, 0.00027382356, 1)
+modulate = Color(0, 14.243845, 0, 1)
+self_modulate = Color(2.0455569e-07, 0.3805425, 0.08430625, 1)
 offset_left = -58.181763
-offset_top = -57.535286
+offset_top = -57.535282
 offset_right = 58.181885
-offset_bottom = 57.535393
+offset_bottom = 57.535397
 max_value = 5.0
 
 [node name="Timer" type="Timer" parent="." unique_id=653898570]
