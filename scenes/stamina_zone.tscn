@@ -2,41 +2,61 @@
 
 [ext_resource type="Texture2D" uid="uid://dkcob5gx2lv7w" path="res://sprites/icon.svg" id="1_wld70"]
 
-[sub_resource type="GDScript" id="GDScript_wld70"]
+[sub_resource type="GDScript" id="GDScript_tbgi4"]
+resource_name = "StaminaZone"
+script/source = "extends Area2D
+class_name StaminaRechargeArea
+@export var recharge_amount: float = 100.0
+@onready var progressBar : ProgressBar = $ProgressBar
+@onready var cooldown_timer: Timer = $Timer
+var can_recharge := true
 
-[sub_resource type="GDScript" id="GDScript_sg5wv"]
-resource_name = "Timer.gd"
-script/source = "extends Timer
-
-
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+	body_entered.connect(_on_body_entered)
+	cooldown_timer.timeout.connect(_on_cooldown_finished)
+	
 func _process(delta: float) -> void:
-	pass
+	progressBar.value = 5 - cooldown_timer.time_left
+	
+func _on_body_entered(body: Node2D) -> void:
+	if not can_recharge:
+		return
+
+	if body is Player:
+		body.stamina = min(body.stamina + recharge_amount, 100)
+		body.can_run = true
+
+		can_recharge = false
+		cooldown_timer.start()
+func _on_cooldown_finished() -> void:
+	can_recharge = true
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sg5wv"]
 size = Vector2(146.40909, 161.09898)
 
-[node name="StaminaZone" type="Sprite2D" unique_id=502630818]
+[node name="StaminaZone" type="Area2D" unique_id=1058024644]
 scale = Vector2(0.08593752, 0.08690311)
-texture = ExtResource("1_wld70")
+script = SubResource("GDScript_tbgi4")
 
-[node name="Area2D" type="Area2D" parent="." unique_id=2137422657]
-position = Vector2(0, -2.194799e-05)
-script = SubResource("GDScript_wld70")
-
-[node name="Timer" type="Timer" parent="Area2D" unique_id=1045591973]
-wait_time = 5.0
-one_shot = true
-script = SubResource("GDScript_sg5wv")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1870092099]
-visible = false
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1395013000]
 position = Vector2(1.5258789e-05, -4.5776367e-05)
 scale = Vector2(0.9999999, 0.9999999)
 shape = SubResource("RectangleShape2D_sg5wv")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=612392395]
+position = Vector2(0, 2.2888184e-05)
+scale = Vector2(0.99999994, 0.99999994)
+texture = ExtResource("1_wld70")
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=1463612209]
+modulate = Color(1.6023252, 11.186601, 0.00027382356, 1)
+offset_left = -58.181763
+offset_top = -57.535286
+offset_right = 58.181885
+offset_bottom = 57.535393
+max_value = 5.0
+
+[node name="Timer" type="Timer" parent="." unique_id=653898570]
+wait_time = 5.0
+one_shot = true

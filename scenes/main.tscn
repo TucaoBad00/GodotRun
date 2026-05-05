@@ -4,10 +4,12 @@
 [ext_resource type="Script" uid="uid://b4n0wlav8yinm" path="res://scripts/raw_input.gd" id="2_tefeu"]
 [ext_resource type="PackedScene" uid="uid://cs0c6vheo5fvi" path="res://scenes/player.tscn" id="3_tipki"]
 [ext_resource type="TileSet" uid="uid://dcxagqjpvymc4" path="res://tilesets/tileset.tres" id="5_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://i3e3ravbcnvq" path="res://scenes/stamina_zone.tscn" id="5_tefeu"]
 
 [sub_resource type="GDScript" id="GDScript_tefeu"]
 resource_name = "Game"
 script/source = "extends Node2D
+
 
 
 func _ready() -> void:
@@ -26,39 +28,6 @@ func _go_to_menu() -> void:
 	get_tree().change_scene_to_file(\"res://scenes/menu.tscn\")
 "
 
-[sub_resource type="GDScript" id="GDScript_tbgi4"]
-resource_name = "StaminaZone"
-script/source = "extends Area2D
-class_name StaminaRechargeArea
-@export var recharge_amount: float = 100.0
-@onready var progressBar : ProgressBar = $ProgressBar
-@onready var cooldown_timer: Timer = $Timer
-var can_recharge := true
-
-func _ready() -> void:
-	body_entered.connect(_on_body_entered)
-	cooldown_timer.timeout.connect(_on_cooldown_finished)
-	
-func _process(delta: float) -> void:
-	progressBar.value = 5 - cooldown_timer.time_left
-	
-func _on_body_entered(body: Node2D) -> void:
-	if not can_recharge:
-		return
-
-	if body is Player:
-		body.stamina = min(body.stamina + recharge_amount, 100)
-		body.can_run = true
-
-		can_recharge = false
-		cooldown_timer.start()
-func _on_cooldown_finished() -> void:
-	can_recharge = true
-"
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_sg5wv"]
-size = Vector2(146.40909, 161.09898)
-
 [sub_resource type="GDScript" id="GDScript_jyhfs"]
 script/source = "extends ProgressBar
 @export var Player : Player
@@ -71,6 +40,21 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	value = Player.stamina
+"
+
+[sub_resource type="GDScript" id="GDScript_o6xl0"]
+resource_name = "cronometro"
+script/source = "extends Label
+
+@onready var timerr : Timer = $Timer
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	text = \"%.2f s\" % timerr.time_left
 "
 
 [node name="Main" type="Node2D" unique_id=1319012822]
@@ -99,32 +83,8 @@ editor_draw_drag_margin = true
 tile_map_data = PackedByteArray("AAAAAAEAAAABAAAAAAABAAEAAAABAAAAAAACAAEAAAACAAAAAAADAAEAAAABAAAAAAAEAAEAAAACAAAAAAAFAAEAAAABAAAAAAAGAAEAAAACAAEAAAAGAAAAAAAAAAAAAAAHAAAAAAAAAAEAAAAIAP//AAAAAAEAAAAJAP//AAAAAAEAAAAIAAAAAAAAAAEAAAAHAAEAAAACAAEAAAAIAAEAAAABAAEAAAAJAAAAAAAAAAEAAAAJAAEAAAACAAEAAAAKAAAAAAAAAAEAAAAKAP//AAAAAAEAAAAKAP7/AAADAAAAAAAJAP7/AAABAAAAAAAIAP7/AAAAAAAAAAAKAAEAAAABAAEAAAAHAP//AAAAAAAAAAANAP7/AAAAAAMAAAAOAP7/AAABAAMAAAAQAP7/AAADAAMAAAATAP7/AAAAAAMAAAAUAP7/AAABAAMAAAD//wEAAAACAAAAAAD+/wEAAAACAAAAAAD9/wEAAAABAAAAAAD8/wEAAAABAAAAAAD7/wEAAAACAAEAAAD9//v/AAABAAIAAAD+//v/AAACAAIAAAD///v/AAABAAIAAAAAAPv/AAABAAIAAAD8//v/AAAAAAIAAAD9//r/AAABAAEAAAD+//r/AAABAAEAAAD///r/AAABAAEAAAAAAPr/AAABAAEAAAABAPr/AAABAAEAAAACAPr/AAABAAEAAAADAPn/AAABAAEAAAAEAPn/AAABAAEAAAAFAPn/AAABAAEAAAAGAPn/AAABAAEAAAAHAPn/AAABAAEAAAAIAPj/AAACAAAAAAAJAPj/AAADAAAAAAABAPf/AAABAAAAAAABAPj/AAABAAEAAAABAPn/AAABAAEAAAABAPv/AAACAAIAAAACAPf/AAACAAAAAAACAPj/AAABAAEAAAACAPn/AAABAAEAAAACAPv/AAABAAIAAAADAPf/AAABAAAAAAADAPj/AAABAAEAAAADAPr/AAABAAEAAAADAPv/AAACAAIAAAAEAPf/AAACAAAAAAAEAPj/AAABAAEAAAAEAPr/AAABAAEAAAAEAPv/AAACAAIAAAAFAPf/AAACAAAAAAAFAPj/AAABAAEAAAAFAPr/AAABAAEAAAAFAPv/AAADAAIAAAAGAPj/AAABAAEAAAAGAPr/AAABAAIAAAAHAPj/AAABAAAAAAAHAPr/AAACAAIAAAAIAPn/AAABAAEAAAAIAPr/AAACAAIAAAAJAPn/AAABAAEAAAAJAPr/AAACAAIAAAAKAPn/AAACAAAAAAAKAPr/AAABAAIAAAALAPn/AAACAAAAAAALAPr/AAACAAIAAAAMAPn/AAABAAAAAAAMAPr/AAABAAIAAAANAPn/AAACAAAAAAANAPr/AAABAAEAAAANAPv/AAAAAAIAAAAOAPn/AAABAAAAAAAOAPr/AAABAAEAAAAOAPv/AAACAAIAAAAPAPn/AAABAAAAAAAPAPr/AAACAAEAAAAPAPv/AAACAAIAAAD7//b/AAAAAAAAAAD7//f/AAACAAEAAAD7//j/AAACAAEAAAD7//n/AAABAAEAAAD7//r/AAACAAIAAAD8//b/AAABAAEAAAD8//f/AAABAAEAAAD8//j/AAABAAEAAAD8//n/AAABAAEAAAD8//r/AAABAAEAAAD8//X/AAAAAAAAAAD9//X/AAADAAAAAAD9//b/AAABAAEAAAD+//b/AAACAAAAAAD///T/AAAAAAMAAAD///b/AAABAAAAAAAAAPT/AAACAAMAAAAAAPb/AAADAAAAAAABAPT/AAADAAMAAAADAPT/AAAAAAIAAAAEAPT/AAACAAIAAAAPAP7/AAACAAMAAAD4////AAAAAAMAAAD5////AAADAAMAAAD1//7/AAAAAAMAAAD2//7/AAADAAMAAADy//3/AAAAAAMAAADz//3/AAADAAMAAADv//3/AAAAAAMAAADw//3/AAADAAMAAADo//7/AAAAAAAAAADo////AAABAAEAAADo/wAAAAAAAAIAAADp//3/AAAAAAAAAADp//7/AAABAAEAAADp////AAACAAEAAADp/wAAAAABAAIAAADq//3/AAACAAAAAADq//7/AAACAAEAAADq////AAABAAEAAADq/wAAAAACAAIAAADr//3/AAACAAAAAADr//7/AAAAAAEAAADr////AAACAAEAAADr/wAAAAABAAIAAADs//3/AAACAAAAAADs//7/AAAAAAEAAADs////AAAAAAEAAADs/wAAAAACAAIAAADt//3/AAADAAAAAADt//7/AAAAAAEAAADt////AAAAAAEAAADt/wAAAAADAAIAAADl//3/AAAAAAMAAADm//3/AAADAAMAAADj//z/AAAAAAMAAADk//z/AAADAAMAAADh//v/AAAAAAMAAADi//v/AAADAAMAAADf//r/AAAAAAMAAADg//r/AAADAAMAAAD6/wAAAAAAAAAAAAD7/wAAAAADAAAAAAAJAP3/AQAAAAAAAgAOAP3/AQAAAAAAAgD6////AQAAAAAAAgD1//3/AQAAAAAAAgDy//z/AQAAAAAAAgDs//z/AQAAAAAAAgDq//z/AQAAAAAAAgDm//z/AQAAAAAAAgDi//r/AQAAAAAAAgAPAAEAAAABAAEAAAAPAAIAAAABAAIAAAAOAAIAAAACAAIAAAAOAAEAAAACAAAAAAANAAIAAAACAAIAAAANAAEAAAABAAAAAAAQAAEAAAABAAEAAAARAAEAAAACAAEAAAASAAEAAAACAAEAAAATAAEAAAACAAEAAAAUAAEAAAABAAEAAAAUAAAAAAACAAAAAAATAAAAAAACAAAAAAASAAAAAAABAAAAAAARAAAAAAABAAAAAAAQAAAAAAACAAAAAAAPAAAAAAAAAAAAAAAQAAIAAAACAAIAAAARAAIAAAABAAIAAAD6/wEAAAAAAAEAAAD6/wIAAAAAAAIAAAD7/wIAAAABAAIAAAD8/wIAAAABAAIAAAD9/wIAAAABAAIAAAD+/wIAAAABAAIAAAD//wIAAAACAAIAAAAAAAIAAAABAAIAAAABAAIAAAABAAIAAAACAAIAAAABAAIAAAADAAIAAAACAAIAAAAEAAIAAAABAAIAAAAFAAIAAAABAAIAAAAGAAIAAAACAAIAAAAHAAIAAAABAAIAAAAIAAIAAAABAAIAAAAJAAIAAAABAAIAAAAKAAIAAAACAAIAAAAMAAIAAAABAAIAAAAMAAEAAAABAAAAAAALAAEAAAACAAAAAAALAAIAAAABAAIAAAAVAAAAAAABAAAAAAAWAAAAAAABAAEAAAAXAP//AAADAAAAAAAWAP//AAAAAAAAAAAWAAEAAAADAAIAAAAVAAEAAAACAAIAAAAUAAIAAAADAAIAAAATAAIAAAACAAIAAAASAAIAAAACAAIAAAAQAPv/AAACAAIAAAAQAPr/AAABAAEAAAAQAPn/AAACAAAAAAAQAPf/AAADAAIAAADw//n/AAACAAIAAADw//j/AAADAAAAAADv//j/AAACAAAAAADu//j/AAACAAAAAADt//n/AAACAAIAAADt//j/AAABAAEAAADs//n/AAABAAIAAADs//j/AAABAAEAAADl//X/AAADAAMAAADk//X/AAABAAAAAADj//X/AAABAAAAAADi//X/AAABAAAAAADh//X/AAABAAAAAADg//X/AAAAAAAAAADk//b/AAADAAIAAADj//b/AAABAAIAAADi//b/AAACAAIAAADh//b/AAACAAIAAADg//b/AAAAAAIAAAAAAPn/AAABAAEAAAAAAPj/AAACAAEAAAAAAPf/AAABAAEAAAD///n/AAABAAEAAAD///j/AAABAAEAAAD///f/AAACAAEAAAD+//n/AAACAAEAAAD+//j/AAABAAEAAAD+//f/AAACAAEAAAD9//n/AAACAAEAAAD9//j/AAACAAEAAAD9//f/AAACAAEAAAABAAAAAQAAAAAAAwACAP//AQAAAAAAAwACAAAAAQAAAAAAAwADAAAAAQAAAAAAAwAEAAAAAQAAAAAAAwADAP//AQAAAAAAAwD6//n/AAAAAAEAAAD6//r/AAAAAAIAAAD6//j/AAAAAAEAAAD6//f/AAAAAAAAAAAXAAAAAAADAAIAAAAXAP3/AAAAAAMAAAAYAP3/AAACAAMAAAAbAPz/AAAAAAAAAAAeAPz/AAADAAAAAAAeAP3/AAADAAIAAAAdAP3/AAACAAIAAAAbAP3/AAAAAAIAAAAcAP3/AAACAAIAAAAcAPz/AAABAAAAAAAdAPz/AAABAAAAAAAYAPv/AAABAAMAAAAXAPv/AAAAAAMAAAAZAP3/AAADAAMAAAAUAPr/AAACAAAAAAASAPv/AAABAAIAAAASAPr/AAACAAAAAAARAPr/AAACAAEAAAARAPv/AAACAAIAAAARAPn/AAADAAAAAAANAPX/AAAAAAAAAAAOAPX/AAABAAAAAAAOAPb/AAACAAEAAAANAPb/AAAAAAEAAAAPAPb/AAACAAEAAAAQAPb/AAADAAEAAAAQAPX/AAADAAAAAAAPAPX/AAABAAAAAAAOAPf/AAACAAIAAAANAPf/AAAAAAIAAAAPAPf/AAACAAIAAAAFAPT/AAABAAIAAAAGAPT/AAABAAIAAAAHAPT/AAACAAIAAAAIAPT/AAADAAIAAAADAPP/AAAAAAAAAAAEAPP/AAACAAAAAAAFAPP/AAACAAAAAAAGAPP/AAACAAAAAAAHAPP/AAABAAAAAAAIAPP/AAADAAAAAAAKAPT/AAAAAAMAAAALAPT/AAADAAMAAAAGAPf/AAADAAAAAAD4//f/AAADAAMAAAD3//f/AAABAAMAAAD2//f/AAAAAAMAAADy//j/AAAAAAMAAADz//j/AAACAAMAAAD0//j/AAADAAMAAADu//n/AAABAAIAAADv//n/AAACAAIAAADt//f/AAADAAAAAADs//f/AAABAAAAAADr//f/AAAAAAAAAADr//j/AAACAAEAAADr//n/AAABAAIAAADq//j/AAAAAAAAAADq//n/AAAAAAIAAADp//b/AAADAAMAAADo//b/AAABAAMAAADn//b/AAAAAAMAAADh//T/AQAAAAAAAgDj//T/AQAAAAAAAgALAPj/AQAAAAAAAgAQAPT/AQAAAAAAAgAOAPT/AQAAAAAAAgAHAPL/AQAAAAAAAgAEAPL/AQAAAAAAAgDv//f/AQAAAAAAAgDs//b/AQAAAAAAAgAZAPv/AAADAAMAAAAVAPr/AAADAAAAAAAVAPv/AAADAAIAAAAUAP3/AQAAAAAAAgAUAPv/AAACAAIAAAATAPv/AAABAAIAAAATAPr/AAABAAAAAAAVAP7/AAADAAMAAAAcAPv/AQAAAAAAAgDd//j/AAADAAMAAADc//j/AAABAAMAAADb//j/AAAAAAMAAADe//X/AAADAAAAAADe//b/AAADAAIAAADd//b/AAACAAIAAADd//X/AAACAAAAAADc//X/AAAAAAAAAADc//b/AAAAAAIAAADa//b/AAADAAMAAADZ//b/AAAAAAMAAAA=")
 tile_set = ExtResource("5_tbgi4")
 
-[node name="StaminaZone" type="Area2D" parent="." unique_id=2137422657]
+[node name="StaminaZone" parent="." unique_id=1058024644 instance=ExtResource("5_tefeu")]
 position = Vector2(-55.000004, 10.999995)
-scale = Vector2(0.08593752, 0.08690311)
-script = SubResource("GDScript_tbgi4")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaminaZone" unique_id=1870092099]
-position = Vector2(1.5258789e-05, -4.5776367e-05)
-scale = Vector2(0.9999999, 0.9999999)
-shape = SubResource("RectangleShape2D_sg5wv")
-
-[node name="Sprite2D" type="Sprite2D" parent="StaminaZone" unique_id=502630818]
-position = Vector2(0, 2.2888184e-05)
-scale = Vector2(0.99999994, 0.99999994)
-texture = ExtResource("1_tbgi4")
-
-[node name="ProgressBar" type="ProgressBar" parent="StaminaZone" unique_id=675243773]
-modulate = Color(1.6023252, 11.186601, 0.00027382356, 1)
-offset_left = -58.181763
-offset_top = -57.535286
-offset_right = 58.181885
-offset_bottom = 57.535393
-max_value = 5.0
-
-[node name="Timer" type="Timer" parent="StaminaZone" unique_id=1862224355]
-wait_time = 5.0
-one_shot = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=201750664]
 
@@ -139,23 +99,40 @@ show_percentage = false
 script = SubResource("GDScript_jyhfs")
 Player = NodePath("../../Player")
 
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=933782433]
+offset_left = 16.0
+offset_top = 65.0
+offset_right = 229.0
+offset_bottom = 113.0
+theme_override_font_sizes/font_size = 48
+text = "aa"
+script = SubResource("GDScript_o6xl0")
+
+[node name="Timer" type="Timer" parent="CanvasLayer/Label" unique_id=984416306]
+wait_time = 60.0
+one_shot = true
+autostart = true
+
+[node name="StaminaZone2" parent="." unique_id=1161588843 instance=ExtResource("5_tefeu")]
+position = Vector2(-110, -47)
+
 [connection signal="body_entered" from="TileMapLayer/Coin" to="TileMapLayer/Coin" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150752" to="TileMapLayer/@Area2D@150752" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150753" to="TileMapLayer/@Area2D@150753" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150754" to="TileMapLayer/@Area2D@150754" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150755" to="TileMapLayer/@Area2D@150755" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150756" to="TileMapLayer/@Area2D@150756" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150757" to="TileMapLayer/@Area2D@150757" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150758" to="TileMapLayer/@Area2D@150758" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150759" to="TileMapLayer/@Area2D@150759" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150765" to="TileMapLayer/@Area2D@150765" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150766" to="TileMapLayer/@Area2D@150766" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150767" to="TileMapLayer/@Area2D@150767" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150768" to="TileMapLayer/@Area2D@150768" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150769" to="TileMapLayer/@Area2D@150769" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150770" to="TileMapLayer/@Area2D@150770" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150771" to="TileMapLayer/@Area2D@150771" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150772" to="TileMapLayer/@Area2D@150772" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150773" to="TileMapLayer/@Area2D@150773" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150774" to="TileMapLayer/@Area2D@150774" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/@Area2D@150775" to="TileMapLayer/@Area2D@150775" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35436" to="TileMapLayer/@Area2D@35436" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35437" to="TileMapLayer/@Area2D@35437" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35438" to="TileMapLayer/@Area2D@35438" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35439" to="TileMapLayer/@Area2D@35439" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35440" to="TileMapLayer/@Area2D@35440" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35441" to="TileMapLayer/@Area2D@35441" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35442" to="TileMapLayer/@Area2D@35442" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35443" to="TileMapLayer/@Area2D@35443" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35449" to="TileMapLayer/@Area2D@35449" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35450" to="TileMapLayer/@Area2D@35450" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35451" to="TileMapLayer/@Area2D@35451" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35452" to="TileMapLayer/@Area2D@35452" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35453" to="TileMapLayer/@Area2D@35453" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35454" to="TileMapLayer/@Area2D@35454" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35455" to="TileMapLayer/@Area2D@35455" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35456" to="TileMapLayer/@Area2D@35456" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35457" to="TileMapLayer/@Area2D@35457" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35458" to="TileMapLayer/@Area2D@35458" method="_on_body_entered"]
+[connection signal="body_entered" from="TileMapLayer/@Area2D@35459" to="TileMapLayer/@Area2D@35459" method="_on_body_entered"]
