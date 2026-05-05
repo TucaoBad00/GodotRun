@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://cpe7neru67bwj"]
+
+[ext_resource type="Script" uid="uid://dlhxrc75gqgjc" path="res://scripts/coin.gd" id="1_i64fm"]
+[ext_resource type="Texture2D" uid="uid://dxah0jku752v8" path="res://sprites/coin.png" id="2_11l1o"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_o6xl0"]
+radius = 4.0
+
+[sub_resource type="Animation" id="Animation_11l1o"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Coin:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_i64fm"]
+resource_name = "rotate"
+length = 0.60000503
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Coin:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 2, 1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_d14el"]
+_data = {
+&"RESET": SubResource("Animation_11l1o"),
+&"rotate": SubResource("Animation_i64fm")
+}
+
+[node name="Coin" type="Area2D" unique_id=1183373720 groups=["coins"]]
+script = ExtResource("1_i64fm")
+value = 5
+
+[node name="Coin" type="Sprite2D" parent="." unique_id=213572935]
+texture = ExtResource("2_11l1o")
+hframes = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=269179160]
+shape = SubResource("CircleShape2D_o6xl0")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=607760687]
+libraries/ = SubResource("AnimationLibrary_d14el")
+autoplay = &"rotate"
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

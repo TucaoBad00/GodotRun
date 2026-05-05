@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://dax6i3xaintq1"]
+
+[sub_resource type="GDScript" id="GDScript_wtfab"]
+script/source = "extends Node2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+#Start
+func _on_start_pressed() -> void:
+	get_tree().change_scene_to_file(\"res://scenes/main.tscn\")
+	
+#Options
+func _on_options_pressed() -> void:
+	pass
+	
+#Quit
+func _on_quit_pressed() -> void:
+	get_tree().quit()
+"
+
+[node name="Main Menu" type="Node2D" unique_id=1948813911]
+script = SubResource("GDScript_wtfab")
+
+[node name="Control" type="Control" parent="." unique_id=584537329]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Start" type="Button" parent="Control" unique_id=1061118783]
+layout_mode = 0
+offset_left = 423.0
+offset_top = 103.0
+offset_right = 751.0
+offset_bottom = 207.0
+text = "Start"
+
+[node name="Options" type="Button" parent="Control" unique_id=138415100]
+layout_mode = 0
+offset_left = 423.0
+offset_top = 253.0
+offset_right = 748.0
+offset_bottom = 363.0
+text = "Options"
+
+[node name="Quit" type="Button" parent="Control" unique_id=990074079]
+layout_mode = 0
+offset_left = 423.0
+offset_top = 395.0
+offset_right = 751.0
+offset_bottom = 515.0
+text = "Quit"
+
+[connection signal="pressed" from="Control/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Control/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="Control/Quit" to="." method="_on_quit_pressed"]

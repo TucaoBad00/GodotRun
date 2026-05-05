@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://i3e3ravbcnvq"]
+
+[ext_resource type="Texture2D" uid="uid://dkcob5gx2lv7w" path="res://sprites/icon.svg" id="1_wld70"]
+
+[sub_resource type="GDScript" id="GDScript_wld70"]
+
+[sub_resource type="GDScript" id="GDScript_sg5wv"]
+resource_name = "Timer.gd"
+script/source = "extends Timer
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sg5wv"]
+size = Vector2(146.40909, 161.09898)
+
+[node name="StaminaZone" type="Sprite2D" unique_id=502630818]
+scale = Vector2(0.08593752, 0.08690311)
+texture = ExtResource("1_wld70")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=2137422657]
+position = Vector2(0, -2.194799e-05)
+script = SubResource("GDScript_wld70")
+
+[node name="Timer" type="Timer" parent="Area2D" unique_id=1045591973]
+wait_time = 5.0
+one_shot = true
+script = SubResource("GDScript_sg5wv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1870092099]
+visible = false
+position = Vector2(1.5258789e-05, -4.5776367e-05)
+scale = Vector2(0.9999999, 0.9999999)
+shape = SubResource("RectangleShape2D_sg5wv")
